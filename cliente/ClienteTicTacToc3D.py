@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import messagebox
 # Servidor URL, este debe coincidir con el del servidor
 # A traves de esta URL el cliente se comunica con el servidor
-SERVER_URL = "https://tic-tac-toe-0l0o.onrender.com/"
+SERVER_URL = "https://tic-tac-toe-0l0o.onrender.com"
 
 # Asignar jugador al conectarse, accede al endpoint /assign
 r = httpx.get(f"{SERVER_URL}/assign")
