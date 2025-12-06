@@ -38,7 +38,7 @@ def on_close():
 # Asociar la función on_close al evento de cerrar la ventana
 tablero.protocol("WM_DELETE_WINDOW", on_close)
 
-#
+
 def get_button_index(z, y, x):
     return (3 - z) * 16 + y * 4 + x
 # Crear un botón para el tablero, igual que el código de base
