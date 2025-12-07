@@ -1,15 +1,27 @@
 import httpx
 from tkinter import *
 from tkinter import messagebox
+import time
 # Servidor URL, este debe coincidir con el del servidor
 # A traves de esta URL el cliente se comunica con el servidor
-SERVER_URL = "https://tic-tac-toe-0l0o.onrender.com"
+SERVER_URL = "https://tic-tac-toe-0l0o.onrender.com" #Para conexión LAN usaremos la IP de la máquina servidor y el puerto
 
 # Asignar jugador al conectarse, accede al endpoint /assign
-r = httpx.get(f"{SERVER_URL}/assign")
-data = r.json() # Los json es el formato de intercambio de datos entre cliente y servidor
-PLAYER_NAME = data["jugador"] # player1 o player2
+# Se implementa reintentos en caso de fallo de conexión
+def conectar_servidor():
+    for intento in range(5):  # hasta 5 intentos
+        try:
+            r = httpx.get(f"{SERVER_URL}/assign", timeout=5.0)
+            r.raise_for_status()
+            return r.json()
+        except Exception as e:
+            print(f"Intento {intento+1} fallido: {e}")
+            time.sleep(2)  # esperar 2 segundos antes de reintentar
+    messagebox.showerror("Error", "No se pudo conectar al servidor después de varios intentos")
+    exit()
 
+data = conectar_servidor()
+PLAYER_NAME = data.get("jugador")
 
 # lista de botones, uno por cada casilla del tablero 4x4x4
 botones = []
@@ -37,7 +49,6 @@ def on_close():
 
 # Asociar la función on_close al evento de cerrar la ventana
 tablero.protocol("WM_DELETE_WINDOW", on_close)
-
 
 def get_button_index(z, y, x):
     return (3 - z) * 16 + y * 4 + x
